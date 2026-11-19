@@ -1,7 +1,7 @@
 
-
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,10 +26,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
+
         victoryText.gameObject.SetActive(false);
         defeatText.gameObject.SetActive(false);
         restartButton.SetActive(false);
         defeatImage.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         UpdateUI();
     }
@@ -45,8 +50,14 @@ public class GameManager : MonoBehaviour
         if (enemiesKilled >= enemiesToWin)
         {
             gameEnded = true;
+
             victoryText.gameObject.SetActive(true);
             victoryText.text = "¡El amor siempre gana!";
+
+            restartButton.SetActive(true);
+
+            UnlockMouse();
+
             Time.timeScale = 0f;
         }
     }
@@ -63,11 +74,29 @@ public class GameManager : MonoBehaviour
         defeatImage.SetActive(true);
         restartButton.SetActive(true);
 
+        UnlockMouse();
+
         Time.timeScale = 0f;
     }
 
     void UpdateUI()
     {
         enemiesText.text = "Elvis eliminados: " + enemiesKilled + "/" + enemiesToWin;
+    }
+
+    void UnlockMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
